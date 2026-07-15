@@ -1,0 +1,338 @@
+<style>
+    /* Кастомные неоновые переменные NeonLook */
+    :root {
+        --bg-color: #060214;
+        --card-bg: rgba(15, 8, 38, 0.45);
+        --primary: #9d42ef;
+        --accent: #00ffff;
+        --text: #f3efff;
+        --glow: rgba(157, 66, 239, 0.4);
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', Roboto, -apple-system, sans-serif;
+    }
+
+    body {
+        background-color: var(--bg-color);
+        color: var(--text);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        position: relative;
+    }
+
+    /* Живой интерактивный фон (Плавающие неоновые сферы) */
+    .bg-animation {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 0;
+        filter: blur(80px);
+        pointer-events: none;
+    }
+
+    .ball {
+        position: absolute;
+        border-radius: 50%;
+        background: radial-gradient(circle, var(--primary) 0%, rgba(0,0,0,0) 70%);
+        animation: float 20s infinite alternate ease-in-out;
+        opacity: 0.6;
+    }
+
+    .ball:nth-child(1) { width: 500px; height: 500px; top: -10%; left: -10%; animation-duration: 25s; }
+    .ball:nth-child(2) { width: 600px; height: 600px; bottom: -20%; right: -10%; background: radial-gradient(circle, #4b0082 0%, rgba(0,0,0,0) 70%); animation-duration: 30s; }
+    .ball:nth-child(3) { width: 400px; height: 400px; top: 40%; left: 50%; background: radial-gradient(circle, #001f3f 0%, rgba(0,0,0,0) 70%); animation-duration: 18s; }
+
+    @keyframes float {
+        0% { transform: translate(0, 0) scale(1); }
+        50% { transform: translate(100px, 80px) scale(1.2); }
+        100% { transform: translate(-50px, 150px) scale(0.9); }
+    }
+
+    /* Маслянисто-плавный курсор */
+    .cursor-dot {
+        width: 6px;
+        height: 6px;
+        background-color: var(--accent);
+        position: fixed;
+        pointer-events: none;
+        z-index: 10000;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 10px var(--accent);
+        transition: width 0.3s, height 0.3s;
+    }
+
+    .cursor-trail {
+        width: 26px;
+        height: 26px;
+        border: 2px solid var(--primary);
+        position: fixed;
+        pointer-events: none;
+        z-index: 9999;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 20px var(--glow);
+        will-change: transform;
+    }
+
+    /* Интерфейс карточки (Ультра-глассморфизм) */
+    .container {
+        background: var(--card-bg);
+        padding: 45px 40px;
+        border-radius: 32px;
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: 1px solid rgba(157, 66, 239, 0.25);
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6), 
+                    inset 0 0 30px rgba(157, 66, 239, 0.15);
+        width: 100%;
+        max-width: 440px;
+        text-align: center;
+        z-index: 10;
+        transform: translateY(0);
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .container:hover {
+        transform: translateY(-5px);
+        border-color: rgba(157, 66, 239, 0.4);
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 6px;
+        background: linear-gradient(45deg, #ffffff, #d3adff, var(--accent));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: 2px;
+        font-weight: 800;
+        filter: drop-shadow(0 2px 10px rgba(157, 66, 239, 0.3));
+    }
+
+    p.subtitle {
+        color: #9287b1;
+        font-size: 0.9rem;
+        margin-bottom: 35px;
+    }
+
+    /* Поля ввода и интерактивная кнопка */
+    input {
+        width: 100%;
+        padding: 18px 24px;
+        background: rgba(10, 5, 28, 0.75);
+        border: 2px solid rgba(157, 66, 239, 0.3);
+        border-radius: 16px;
+        color: #fff;
+        font-size: 1.15rem;
+        outline: none;
+        transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        text-align: center;
+        letter-spacing: 1.5px;
+    }
+
+    input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 25px rgba(0, 255, 255, 0.25), inset 0 0 10px rgba(0, 255, 255, 0.1);
+        background: rgba(10, 5, 28, 0.9);
+    }
+
+    button {
+        width: 100%;
+        padding: 18px;
+        margin-top: 20px;
+        background: linear-gradient(135deg, var(--primary) 0%, #53118c 100%);
+        border: none;
+        border-radius: 16px;
+        color: white;
+        font-size: 1.1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 20px rgba(157, 66, 239, 0.3);
+    }
+
+    button:hover {
+        box-shadow: 0 12px 30px rgba(157, 66, 239, 0.55);
+        background: linear-gradient(135deg, #b25eff 0%, var(--primary) 100%);
+    }
+
+    /* Изящный раскрывающийся блок ответов */
+    .result-box {
+        margin-top: 30px;
+        padding: 0;
+        max-height: 0;
+        overflow: hidden;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.02);
+        transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        opacity: 0;
+        text-align: left;
+        transform: scale(0.95);
+    }
+
+    .result-box.active {
+        padding: 24px;
+        max-height: 260px;
+        opacity: 1;
+        transform: scale(1);
+        border: 1px solid rgba(157, 66, 239, 0.2);
+        box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.02);
+    }
+
+    .result-item {
+        margin-bottom: 14px;
+        font-size: 0.95rem;
+    }
+
+    .result-item:last-child { margin-bottom: 0; }
+    .label { color: #8e83b3; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; display: block; }
+    .value { color: #fff; font-weight: 600; font-size: 1.05rem; }
+    .value.highlight { color: var(--accent); text-shadow: 0 0 15px rgba(0, 255, 255, 0.4); }
+
+    .loader {
+        display: none;
+        width: 26px;
+        height: 26px;
+        border: 3px solid rgba(255,255,255,0.05);
+        border-radius: 50%;
+        border-top-color: var(--accent);
+        animation: spin 0.8s linear infinite;
+        margin: 20px auto 0 auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+<!-- Анимированный задний план -->
+<div class="bg-animation">
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+</div>
+
+<!-- Элементы трейла -->
+<div class="cursor-dot" id="dot"></div>
+<div class="cursor-trail" id="trail"></div>
+
+<!-- Карточка NeonLook -->
+<div class="container">
+    <h1>⚡ NeonLook</h1>
+    <p class="subtitle">Открытый open-source поиск оператора и региона</p>
+
+    <input type="tel" id="phoneInput" placeholder="79991112233" autocomplete="off">
+    <button onclick="lookupPhone()">Найти номер</button>
+    
+    <div class="loader" id="loader"></div>
+
+    <div class="result-box" id="resultBox">
+        <div class="result-item">
+            <span class="label">Регион регистрации</span>
+            <span class="value" id="resRegion">-</span>
+        </div>
+        <div class="result-item">
+            <span class="label">Оператор связи</span>
+            <span class="value highlight" id="resOperator">-</span>
+        </div>
+        <div class="result-item">
+            <span class="label">Код MNP сети</span>
+            <span class="value" id="resMccMnc">-</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- 1. МАТЕМАТИЧЕСКИЙ ЖИДКИЙ ТРЕЙЛ (LERP) ---
+    const dot = document.getElementById('dot');
+    const trail = document.getElementById('trail');
+
+    let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    let trailPos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+
+    // Считываем позицию мыши без задержки
+    window.addEventListener('mousemove', (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+        
+        dot.style.left = mouse.x + 'px';
+        dot.style.top = mouse.y + 'px';
+    });
+
+    // Функция линейной интерполяции (lerp) для создания масляного эффекта догона
+    function animateTrail() {
+        // Коэффициент 0.15 — идеальный баланс между скоростью и "тягучестью"
+        trailPos.x += (mouse.x - trailPos.x) * 0.15;
+        trailPos.y += (mouse.y - trailPos.y) * 0.15;
+
+        trail.style.left = trailPos.x + 'px';
+        trail.style.top = trailPos.y + 'px';
+
+        requestAnimationFrame(animateTrail);
+    }
+    // Запускаем игровой цикл отрисовки курсора
+    animateTrail();
+
+    // Реакция на наведение (Hover эффекты)
+    document.querySelectorAll('input, button').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            dot.style.width = '12px'; dot.style.height = '12px';
+            trail.style.transform = 'translate(-50%, -50%) scale(1.4)';
+            trail.style.borderColor = 'var(--accent)';
+        });
+        el.addEventListener('mouseleave', () => {
+            dot.style.width = '6px'; dot.style.height = '6px';
+            trail.style.transform = 'translate(-50%, -50%) scale(1)';
+            trail.style.borderColor = 'var(--primary)';
+        });
+    });
+
+    // --- 2. СТАБИЛЬНЫЙ API ЗАПРОС К БАЗЕ МИНЦИФРЫ ---
+    async function lookupPhone() {
+        const input = document.getElementById('phoneInput').value;
+        const cleanPhone = input.replace(/\D/g, ''); 
+
+        if (cleanPhone.length < 10) {
+            alert('Пожалуйста, введите полный номер телефона.');
+            return;
+        }
+
+        const loader = document.getElementById('loader');
+        const resultBox = document.getElementById('resultBox');
+        
+        resultBox.classList.remove('active');
+        loader.style.display = 'block';
+
+        try {
+            const response = await fetch(`https://num.space{cleanPhone}`);
+            const data = await response.json();
+
+            loader.style.display = 'none';
+
+            if (!data || !data.operator) {
+                alert('Номер отсутствует в базе данных сотовых операторов.');
+                return;
+            }
+
+            document.getElementById('resRegion').innerText = data.region?.name || 'Не определен';
+            document.getElementById('resOperator').innerText = data.operator?.name || 'Не определен';
+            document.getElementById('resMccMnc').innerText = `MCC: ${data.operator?.mcc || '—'} / MNC: ${data.operator?.mnc || '—'}`;
+
+            resultBox.classList.add('active');
+
+        } catch (error) {
+            loader.style.display = 'none';
+            alert('Ошибка соединения с открытым реестром.');
+            console.error(error);
+        }
+    }
+
+    document.getElementById('phoneInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') lookupPhone();
+    });
+</script>
